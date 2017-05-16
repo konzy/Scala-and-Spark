@@ -1,5 +1,6 @@
-import org.apache.spark.ml.evaluation.RegressionEvaluator
 import org.apache.spark.ml.recommendation.ALS
+import org.apache.spark.sql._
+val spark = SparkSession.builder().getOrCreate()
 
 val ratings = spark.read.option("header","true").option("inferSchema","true").csv("/FileStore/tables/hivl15uf1480488667173/movie_ratings.csv")
 
@@ -22,7 +23,10 @@ val predictions = model.transform(test)
 
 // import to use abs()
 import org.apache.spark.sql.functions._
-val error = predictions.select(abs($"rating"-$"prediction"))
 
-// Drop NaNs
-error.na.drop().describe().show()
+val error = abs(predictions.col("rating")) - abs(predictions.col("prediction"))
+//error.withColumn("id", when($"id".isNull, 0).otherwise(1)).show
+//// Drop NaNs
+//df.filter(error.isNotNull)
+//
+//error.na().drop().describe().show()

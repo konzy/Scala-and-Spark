@@ -33,7 +33,7 @@ df.describe()
 df.select("Volume").show()
 
 // Multiple Columns
-df.select($"Date",$"Close").show(2)
+df.select("Date", "Close").show(2)
 
 // Creating New Columns
 val df2 = df.withColumn("HighPlusLow",df("High")-df("Low"))

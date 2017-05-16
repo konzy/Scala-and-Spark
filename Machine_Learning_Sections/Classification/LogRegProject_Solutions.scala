@@ -28,6 +28,8 @@
 // Import SparkSession and Logisitic Regression
 import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions
+
 
 // Optional: Use the following code below to set the Error reporting
 import org.apache.log4j._
@@ -65,12 +67,14 @@ for(ind <- Range(1,colnames.length)){
 //    - Rename the Clicked on Ad column to "label"
 //    - Grab the following columns "Daily Time Spent on Site","Age","Area Income","Daily Internet Usage","Timestamp","Male"
 //    - Create a new column called Hour from the Timestamp containing the Hour of the click
+//val timedata = data.withColumn("Hour",hour(data("Timestamp")))
 
-val timedata = data.withColumn("Hour",hour(data("Timestamp")))
 
-val logregdata = (timedata.select(data("Clicked on Ad").as("label"),
-                    $"Daily Time Spent on Site", $"Age", $"Area Income",
-                    $"Daily Internet Usage",$"Hour",$"Male"))
+val timedata = data.withColumn("Hour", functions.hour(data("Timestamp")))
+
+val logregdata = (timedata.select(data("Clicked on Ad").as("label").toString(),
+                    "Daily Time Spent on Site", "Age", "Area Income",
+                    "Daily Internet Usage","Hour","Male"))
 
 
 // Import VectorAssembler and Vectors
@@ -116,7 +120,7 @@ val results = model.transform(test)
 import org.apache.spark.mllib.evaluation.MulticlassMetrics
 
 // Convert the test results to an RDD using .as and .rdd
-val predictionAndLabels = results.select($"prediction",$"label").as[(Double, Double)].rdd
+val predictionAndLabels = results.select("prediction", "Label").as[(Double, Double)].rdd
 
 // Instantiate a new MulticlassMetrics object
 val metrics = new MulticlassMetrics(predictionAndLabels)

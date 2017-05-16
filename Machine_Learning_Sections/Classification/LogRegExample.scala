@@ -40,7 +40,7 @@ for(ind <- Range(1,colnames.length)){
 //////////////////////////////////////////////////
 
 // Grab only the columns we want
-val logregdataall = data.select(data("Survived").as("label"), $"Pclass", $"Sex", $"Age", $"SibSp", $"Parch", $"Fare", $"Embarked")
+val logregdataall = data.select(data("Survived").as("label").toString(), "Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked")
 val logregdata = logregdataall.na.drop()
 
 // A few things we need to do before Spark can accept the data!
@@ -60,9 +60,9 @@ val genderEncoder = new OneHotEncoder().setInputCol("SexIndex").setOutputCol("Se
 val embarkEncoder = new OneHotEncoder().setInputCol("EmbarkIndex").setOutputCol("EmbarkVec")
 
 // Assemble everything together to be ("label","features") format
-val assembler = (new VectorAssembler()
+val assembler = new VectorAssembler()
                   .setInputCols(Array("Pclass", "SexVec", "Age","SibSp","Parch","Fare","EmbarkVec"))
-                  .setOutputCol("features") )
+                  .setOutputCol("features")
 
 
 ////////////////////////////
@@ -94,7 +94,7 @@ val results = model.transform(test)
 import org.apache.spark.mllib.evaluation.MulticlassMetrics
 
 // Need to convert to RDD to use this
-val predictionAndLabels = results.select($"prediction",$"label").as[(Double, Double)].rdd
+val predictionAndLabels = results.select("prediction","label").as[(Double, Double)].rdd
 
 // Instantiate metrics object
 val metrics = new MulticlassMetrics(predictionAndLabels)

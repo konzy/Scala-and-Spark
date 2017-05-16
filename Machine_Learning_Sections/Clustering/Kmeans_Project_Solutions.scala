@@ -41,7 +41,7 @@ val dataset = spark.read.option("header","true").option("inferSchema","true").cs
 // Select the following columns for the training set:
 // Fresh, Milk, Grocery, Frozen, Detergents_Paper, Delicassen
 // Cal this new subset feature_data
-val feature_data = dataset.select($"Fresh", $"Milk", $"Grocery", $"Frozen", $"Detergents_Paper", $"Delicassen")
+val feature_data = dataset.select("Fresh", "Milk", "Grocery", "Frozen", "Detergents_Paper", "Delicassen")
 
 
 // Import VectorAssembler and Vectors

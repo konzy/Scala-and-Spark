@@ -15,11 +15,11 @@ val data = Array(
 
 // Perform the operation
 val df = spark.createDataFrame(data.map(Tuple1.apply)).toDF("features")
-val pca = (new PCA()
+val pca = new PCA()
   .setInputCol("features")
   .setOutputCol("pcaFeatures")
   .setK(3)
-  .fit(df))
+  .fit(df)
 
 // Transform and check out the results
 // Check out the results

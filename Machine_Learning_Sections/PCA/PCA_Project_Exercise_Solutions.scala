@@ -117,17 +117,17 @@ import org.apache.spark.ml.linalg.Vectors
 // Since there are so many columns, you may find this line useful
 // to just pass in to setInputCols
 
-val colnames = (Array("mean radius", "mean texture", "mean perimeter", "mean area", "mean smoothness",
+val colnames = Array("mean radius", "mean texture", "mean perimeter", "mean area", "mean smoothness",
 "mean compactness", "mean concavity", "mean concave points", "mean symmetry", "mean fractal dimension",
 "radius error", "texture error", "perimeter error", "area error", "smoothness error", "compactness error",
 "concavity error", "concave points error", "symmetry error", "fractal dimension error", "worst radius",
 "worst texture", "worst perimeter", "worst area", "worst smoothness", "worst compactness", "worst concavity",
-"worst concave points", "worst symmetry", "worst fractal dimension"))
+"worst concave points", "worst symmetry", "worst fractal dimension")
 
 val assembler = new VectorAssembler().setInputCols(colnames).setOutputCol("features")
 
 // Use the assembler to transform our DataFrame to a single column: features
-val output = assembler.transform(data).select($"features")
+val output = assembler.transform(data).select("features")
 
 // Often its a good idea to normalize each feature to have unit standard
 // deviation and/or zero mean,vwhen using PCA.
@@ -140,11 +140,11 @@ val output = assembler.transform(data).select($"features")
 // Create a new StandardScaler() object called scaler
 // Set the input to the features column and the ouput to a column called
 // scaledFeatures
-val scaler = (new StandardScaler()
+val scaler = new StandardScaler()
   .setInputCol("features")
   .setOutputCol("scaledFeatures")
   .setWithStd(true)
-  .setWithMean(false))
+  .setWithMean(false)
 
 // Compute summary statistics by fitting the StandardScaler.
 // Basically create a new object called scalerModel by using scaler.fit()
@@ -160,11 +160,11 @@ val scaledData = scalerModel.transform(output)
 // Create a new PCA() object that will take in the scaledFeatures
 // and output the pcs features, use 4 principal components
 // Then fit this to the scaledData
-val pca = (new PCA()
+val pca = new PCA()
   .setInputCol("scaledFeatures")
   .setOutputCol("pcaFeatures")
   .setK(4)
-  .fit(scaledData))
+  .fit(scaledData)
 
 // Once your pca has been created and fit, transform the scaledData
 // Call this new dataframe pcaDF

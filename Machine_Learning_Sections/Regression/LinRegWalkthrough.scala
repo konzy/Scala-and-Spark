@@ -44,7 +44,7 @@ import org.apache.spark.ml.linalg.Vectors
 
 // Rename Price to label column for naming convention.
 // Grab only numerical columns from the data
-val df = data.select(data("Price").as("label"),$"Avg Area Income",$"Avg Area House Age",$"Avg Area Number of Rooms",$"Area Population")
+val df = data.select(data("Price").as("label").toString(), "Avg Area Income", "Avg Area House Age", "Avg Area Number of Rooms", "Area Population")
 
 // An assembler converts the input values to a vector
 // A vector is what the ML algorithm reads to train a model
@@ -54,7 +54,7 @@ val df = data.select(data("Price").as("label"),$"Avg Area Income",$"Avg Area Hou
 val assembler = new VectorAssembler().setInputCols(Array("Avg Area Income","Avg Area House Age","Avg Area Number of Rooms","Area Population")).setOutputCol("features")
 
 // Use the assembler to transform our DataFrame to the two columns
-val output = assembler.transform(df).select($"label",$"features")
+val output = assembler.transform(df).select("label", "features")
 
 
 // Create a Linear Regression Model object
@@ -67,17 +67,17 @@ val lr = new LinearRegression()
 val lrModel = lr.fit(output)
 
 // Print the coefficients and intercept for linear regression
-println(s"Coefficients: ${lrModel.coefficients} Intercept: ${lrModel.intercept}")
+println(s"Coefficients:  {lrModel.coefficients} Intercept:  {lrModel.intercept}")
 
 // Summarize the model over the training set and print out some metrics!
 // Explore this in the spark-shell for more methods to call
 val trainingSummary = lrModel.summary
 
-println(s"numIterations: ${trainingSummary.totalIterations}")
-println(s"objectiveHistory: ${trainingSummary.objectiveHistory.toList}")
+println(s"numIterations:  {trainingSummary.totalIterations}")
+println(s"objectiveHistory:  {trainingSummary.objectiveHistory.toList}")
 
 trainingSummary.residuals.show()
 
-println(s"RMSE: ${trainingSummary.rootMeanSquaredError}")
-println(s"MSE: ${trainingSummary.meanSquaredError}")
-println(s"r2: ${trainingSummary.r2}")
+println(s"RMSE:  {trainingSummary.rootMeanSquaredError}")
+println(s"MSE:  {trainingSummary.meanSquaredError}")
+println(s"r2:  {trainingSummary.r2}")

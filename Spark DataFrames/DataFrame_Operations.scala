@@ -49,4 +49,5 @@ val High484 = df.filter($"High"===484.40).collect()
 // http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$
 
 // Examples of Operations
-df.select(corr("High","Low")).show() // Pearson Correlation
+
+//df.select(corr("High","Low")).show() // Pearson Correlation

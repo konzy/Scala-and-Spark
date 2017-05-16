@@ -34,7 +34,7 @@ import org.apache.spark.ml.linalg.Vectors
 
 // Rename label column
 // Grab only numerical columns
-val df = data.select(data("Price").as("label"),$"Avg Area Income",$"Avg Area House Age",$"Avg Area Number of Rooms",$"Area Population")
+val df = data.select(data("Price").as("label").toString(),"Avg Area Income","Avg Area House Age","Avg Area Number of Rooms","Area Population")
 
 // An assembler converts the input values to a vector
 // A vector is what the ML algorithm reads to train a model
@@ -44,7 +44,7 @@ val df = data.select(data("Price").as("label"),$"Avg Area Income",$"Avg Area Hou
 val assembler = new VectorAssembler().setInputCols(Array("Avg Area Income","Avg Area House Age","Avg Area Number of Rooms","Area Population")).setOutputCol("features")
 
 // Transform the DataFrame
-val output = assembler.transform(df).select($"label",$"features")
+val output = assembler.transform(df).select("label","features")
 
 
 // Create an array of the training and test data
@@ -67,11 +67,11 @@ val paramGrid = new ParamGridBuilder().addGrid(lr.regParam,Array(1000,0.001)).bu
 // In this case the estimator is simply the linear regression.
 // A TrainValidationSplit requires an Estimator, a set of Estimator ParamMaps, and an Evaluator.
 // 80% of the data will be used for training and the remaining 20% for validation.
-val trainValidationSplit = (new TrainValidationSplit()
+val trainValidationSplit = new TrainValidationSplit()
                             .setEstimator(lr)
-                            .setEvaluator(new RegressionEvaluator.setMetricName("r2") )
+                            .setEvaluator(new RegressionEvaluator)
                             .setEstimatorParamMaps(paramGrid)
-                            .setTrainRatio(0.8) )
+                            .setTrainRatio(0.8)
 
 
 // You can then treat this object as the new model and use fit on it.

@@ -49,7 +49,7 @@ import org.apache.spark.ml.linalg.Vectors
 // Rename the Yearly Amount Spent Column as "label"
 // Also grab only the numerical columns from the data
 // Set all of this as a new dataframe called df
-val df = data.select(data("Yearly Amount Spent").as("label"),$"Avg Session Length",$"Time on App",$"Time on Website",$"Length of Membership")
+val df = data.select(data("Yearly Amount Spent").as("label").toString(), "Avg Session Length", "Time on App", "Time on Website", "Length of Membership")
 
 // An assembler converts the input values to a vector
 // A vector is what the ML algorithm reads to train a model
@@ -58,10 +58,10 @@ val df = data.select(data("Yearly Amount Spent").as("label"),$"Avg Session Lengt
 // to a single output column of an array called "features"
 // Set the input columns from which we are supposed to read the values.
 // Call this new object assembler
-val assembler = new VectorAssembler().setInputCols(Array("Avg Session Length","Time on App","Time on Website","Length of Membership")).setOutputCol("features")
+val assembler = new VectorAssembler().setInputCols(Array("Avg Session Length", "Time on App", "Time on Website", "Length of Membership")).setOutputCol("features")
 
 // Use the assembler to transform our DataFrame to the two columns: label and features
-val output = assembler.transform(df).select($"label",$"features")
+val output = assembler.transform(df).select("label", "features")
 
 
 // Create a Linear Regression Model object

@@ -7,6 +7,7 @@ val spark = SparkSession.builder().getOrCreate()
 // Create a DataFrame from Spark Session read csv
 // Technically known as class Dataset
 val df = spark.read.option("header","true").option("inferSchema","true").csv("Sales.csv")
+import spark.implicits._
 
 // Show Schema
 df.printSchema()
@@ -28,6 +29,7 @@ df.groupBy("Company").max().show()
 df.groupBy("Company").min().show()
 // Sum
 df.groupBy("Company").sum().show()
+
 
 // Other Aggregate Functions
 // http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$
